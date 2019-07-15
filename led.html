@@ -1,0 +1,75 @@
+<!-- /*
+*    Copyright 2018 Misty Robotics, Inc.
+*    Licensed under the Apache License, Version 2.0 (the "License");
+*    you may not use this file except in compliance with the License.
+*    You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+*    Unless required by applicable law or agreed to in writing, software
+*    distributed under the License is distributed on an "AS IS" BASIS,
+*    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+implied.
+*    See the License for the specific language governing permissions and
+*    limitations under the License.
+*/ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Tutorial | Changing Misty's LED</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Reference a link to a CDN for Axios here -->
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <script>
+
+        function start_skill(){    
+            // Declare a constant variable.
+            // Set its value to your robot's IP address.
+            const ip = document.getElementById("IP").value;
+
+            message("Targeting misty in "+ip);
+            // Create a data object to send with the POST request. 
+            // Set values for each RGB color property.
+            let data = {
+                "red": 255,
+                "green": 0,
+                "blue": 0
+            };
+            // Call axios.post(). Pass the URL of the ChangeLED 
+            // endpoint as the first parameter and the data object 
+            // as the second.
+            // Use a then() method after calling axios.post(). 
+            // Pass in a callback function to interpret the return 
+            // values of the call and to print a message to the console 
+            // indicating the request's success.
+            // Use a catch() method after then(). catch() triggers 
+            // if the promise is rejected. Pass a callback to catch() 
+            // to print any errors to the console.
+            message("Send http request to change led.");
+            axios.post("http://" + ip + "/api/led", data)
+                .then(function (response) {
+                    message('ChangeLED was a '+response.data[0].status)
+                    console.log(`ChangeLED was a ${response.data[0].status}`);
+                })
+                .catch(function (error) {
+                    message('There was an error with the request: '+error);
+                    console.log(`There was an error with the request ${error}`);
+                });
+        }
+        function message(text){
+            var current = document.getElementById("log").innerHTML;
+            current = current + ">> "+text+"<br/>";
+            document.getElementById("log").innerHTML = current;
+        }
+    </script>
+
+    Misty IP: 
+    <input type="text" id="IP" value="192.168.2.1"></input> 
+    <input type="button" value="START SKILL" onclick="start_skill()"></input>
+    <div id="log"></div>
+</body>
+</html>
